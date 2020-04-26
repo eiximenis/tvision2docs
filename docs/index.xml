@@ -1,0 +1,119 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>tvision2docs – Documentation</title><link>/docs/</link><description>Recent content in Documentation on tvision2docs</description><generator>Hugo -- gohugo.io</generator><atom:link href="/docs/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: The component lifecycles</title><link>/docs/core/component-lifecycle/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>/docs/core/component-lifecycle/</guid><description>
+&lt;p>The lifecycle of a component it is very simple. A component can be:&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>Dettached: The component object is created but is not attached to the tree. TVision2 don&amp;rsquo;t care about a component until it is attached to the tree.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Attached &amp;amp; Running: The component is running and it is attached to the tree. When a component is attached participates from the main loop through the methods &lt;code>Update&lt;/code> and &lt;code>Draw&lt;/code>, until you remove the component from the tree.&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="events-and-notifications-when-attaching-a-component">Events and notifications when attaching a component&lt;/h2>
+&lt;p>When a component is &lt;strong>attached to the tree&lt;/strong> following events are triggered:&lt;/p>
+&lt;ol>
+&lt;li>The &lt;code>OnComponentMounted&lt;/code> action from the component metadata is called.&lt;/li>
+&lt;li>The &lt;code>ComponentAdded&lt;/code> event from the ComponentTree is triggered&lt;/li>
+&lt;li>The &lt;code>AfterAddAction&lt;/code> specified when creating the component (if any) is called&lt;/li>
+&lt;li>The &lt;code>TreeUpdated&lt;/code> event from the ComponentTree is triggered&lt;/li>
+&lt;/ol>
+&lt;blockquote>
+&lt;p>Remember that adding a component to the tree is an asynchronous operation and many components can be added in a single &amp;ldquo;add operation&amp;rdquo;. Steps 1,2 and 3 happen once per component and step 4 happen only once per add operation (when all components are added).&lt;/p>
+&lt;/blockquote>
+&lt;p>When &lt;strong>dettaching&lt;/strong> a component following happens:&lt;/p>
+&lt;ol>
+&lt;li>The &lt;code>OnComponentWillBeUnmounted&lt;/code> action from the component metadata is invoked. At this point the component can abort the dettach operation.&lt;/li>
+&lt;li>The &lt;code>OnComponentUnmounted&lt;/code> action from the component metadata is invoked&lt;/li>
+&lt;li>The &lt;code>ComponentRemoved&lt;/code> event from the tree is triggered&lt;/li>
+&lt;li>The &lt;code>TreeUpdated&lt;/code> event from the tree is triggered&lt;/li>
+&lt;/ol>
+&lt;blockquote>
+&lt;p>Like adding components, removing is an asynchronous operation. Steps 1, 2 &amp;amp; 3 happen once per each component, and step 4 only once when all components in the &amp;ldquo;remove operation&amp;rdquo; are removed from the tree.&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="dettaching-a-parent-component">Dettaching a parent component&lt;/h2>
+&lt;p>When a component that have childs is dettached, all their childs are dettached too. First the childs are dettached and lastly the parent component is.&lt;/p>
+&lt;blockquote>
+&lt;p>If &lt;strong>any&lt;/strong> of the childs aborts the dettaching operation (through the &lt;code>OnComponentWillBeUnmounted&lt;/code> action) no component is deleted.&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="using-the-metadata-actions-of-the-component-lifecycle">Using the Metadata actions of the component lifecycle&lt;/h2>
+&lt;p>When creating the component you can add the actions &lt;code>OnComponentMounted&lt;/code>, &lt;code>OnComponentUnmounted&lt;/code> and &lt;code>OnComponentWillBeUnmounted&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-csharp" data-lang="csharp">&lt;span style="color:#204a87;font-weight:bold">var&lt;/span> &lt;span style="color:#000">cmp&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#204a87;font-weight:bold">new&lt;/span> &lt;span style="color:#000">TvComponent&lt;/span>&lt;span style="color:#000;font-weight:bold">&amp;lt;&lt;/span>&lt;span style="color:#204a87;font-weight:bold">string&lt;/span>&lt;span style="color:#000;font-weight:bold">&amp;gt;(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;hello&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;label&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;span style="color:#000">cfg&lt;/span> &lt;span style="color:#000;font-weight:bold">=&amp;gt;&lt;/span>
+&lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#000">cfg&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">WhenComponentMounted&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">ctx&lt;/span> &lt;span style="color:#000;font-weight:bold">=&amp;gt;&lt;/span> &lt;span style="color:#000">ComponentMounted&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">ctx&lt;/span>&lt;span style="color:#000;font-weight:bold">));&lt;/span>
+&lt;span style="color:#000;font-weight:bold">});&lt;/span>
+&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>This code creates a component holding an string, and adds the &lt;code>ComponentMounted&lt;/code> action. When adding an action you provide a deletage that will be invoked.&lt;/p>
+&lt;p>You can use following methods:&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-csharp" data-lang="csharp">&lt;span style="color:#000">WhenComponentMounted&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">Action&lt;/span>&lt;span style="color:#000;font-weight:bold">&amp;lt;&lt;/span>&lt;span style="color:#000">ComponentMoutingContext&lt;/span>&lt;span style="color:#000;font-weight:bold">&amp;gt;&lt;/span> &lt;span style="color:#000">mountAction&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;span style="color:#000">WhenComponentUnmounted&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">Action&lt;/span>&lt;span style="color:#000;font-weight:bold">&amp;lt;&lt;/span>&lt;span style="color:#000">ComponentMoutingContext&lt;/span>&lt;span style="color:#000;font-weight:bold">&amp;gt;&lt;/span> &lt;span style="color:#000">unmountAction&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;span style="color:#000">WhenComponentWillbeUnmounted&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">Action&lt;/span>&lt;span style="color:#000;font-weight:bold">&amp;lt;&lt;/span>&lt;span style="color:#000">ComponentMountingCancellableContext&lt;/span>&lt;span style="color:#000;font-weight:bold">&amp;gt;&lt;/span> &lt;span style="color:#000">unmountAction&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;span style="color:#000">WhenChildMounted&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">Action&lt;/span>&lt;span style="color:#000;font-weight:bold">&amp;lt;&lt;/span>&lt;span style="color:#000">ChildComponentMoutingContext&lt;/span>&lt;span style="color:#000;font-weight:bold">&amp;gt;&lt;/span> &lt;span style="color:#000">childMountAction&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;span style="color:#000">WhenChildUnmounted&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">Action&lt;/span>&lt;span style="color:#000;font-weight:bold">&amp;lt;&lt;/span>&lt;span style="color:#000">ChildComponentMoutingContext&lt;/span>&lt;span style="color:#000;font-weight:bold">&amp;gt;&lt;/span> &lt;span style="color:#000">childUndmountAction&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>&lt;code>WhenComponentMounted&lt;/code> (&lt;code>OnComponentMounted&lt;/code> action): Invoked when the component is mounted&lt;/li>
+&lt;li>&lt;code>WhenComponentUnmounted&lt;/code> (&lt;code>OnComponentUnmounted&lt;/code> action): Invoked then the component is unmounted&lt;/li>
+&lt;li>&lt;code>WhenComponentWillbeUnmounted&lt;/code> (&lt;code>OnComponentWillbeUnmounted&lt;/code> action): Invoked when the component is about to be invoked giving the chance to the component to abort the operation&lt;/li>
+&lt;li>&lt;code>WhenChildMounted&lt;/code> (&lt;code>OnChildMountedAction&lt;/code> action): Invoked when a child component is mounted&lt;/li>
+&lt;li>&lt;code>WhenChildUnmounted&lt;/code> (&lt;code>OnChildMountedUnmounted&lt;/code> action): Invoked when a child component is unmounted.&lt;/li>
+&lt;/ul>
+&lt;blockquote>
+&lt;p>When adding a component as a child, it is possible to use an option to avoid the &lt;code>OnChildMountedAction&lt;/code> to be called.&lt;/p>
+&lt;/blockquote></description></item><item><title>Docs: The Component Tree</title><link>/docs/core/component-tree/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>/docs/core/component-tree/</guid><description>
+&lt;p>The &lt;em>component tree&lt;/em> is a structure in memory that holds all the &lt;em>components&lt;/em> and their relationships. There is a single &lt;em>component tree&lt;/em> per each TVision2 application, and you can access to it using the &lt;code>UI&lt;/code> property from the &lt;code>ITuiEngine&lt;/code>. The &lt;em>component tree&lt;/em> is responsible for:&lt;/p>
+&lt;ul>
+&lt;li>Holding all &lt;em>components&lt;/em> of the application&lt;/li>
+&lt;li>Mantaining their relationships&lt;/li>
+&lt;/ul>
+&lt;h2 id="adding-components-to-the-tree">Adding components to the tree&lt;/h2>
+&lt;p>You can create a &lt;em>component&lt;/em> (instance of &lt;code>TvComponent&amp;lt;TState&amp;gt;&lt;/code> class) at any time, but until you don&amp;rsquo;t add the component to the &lt;em>component tree&lt;/em> it do not exists as for TVision2 concerns. Howerver creating a component and adding it to the tree are two separate steps.&lt;/p>
+&lt;p>When you add a component to the tree &lt;strong>you specify the relationship to this component from other component&lt;/strong>. This is a very important concept in TVision2, so take time to assimilate it: the relationships between components are defined when you add components to the tree. You can create parent/child relationships but the components participating in those relationships are unaware of that: the relationship is maintained in the tree, not in the &lt;em>component&lt;/em> itself.&lt;/p>
+&lt;p>You can add a component in the tree by calling one of the &lt;em>Add&lt;/em> methods:&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-csharp" data-lang="csharp">&lt;span style="color:#204a87;font-weight:bold">public&lt;/span> &lt;span style="color:#000">TvComponentMetadata&lt;/span> &lt;span style="color:#000">Add&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">TvComponent&lt;/span> &lt;span style="color:#000">componentToAdd&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">Action&lt;/span>&lt;span style="color:#000;font-weight:bold">&amp;lt;&lt;/span>&lt;span style="color:#000">AddComponentOptions&lt;/span>&lt;span style="color:#000;font-weight:bold">&amp;gt;&lt;/span> &lt;span style="color:#000">addOptions&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#204a87;font-weight:bold">null&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">public&lt;/span> &lt;span style="color:#000">TvComponentMetadata&lt;/span> &lt;span style="color:#000">AddAfter&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">TvComponent&lt;/span> &lt;span style="color:#000">componentToAdd&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">TvComponent&lt;/span> &lt;span style="color:#000">componentBefore&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;span style="color:#204a87;font-weight:bold">public&lt;/span> &lt;span style="color:#000">TvComponentMetadata&lt;/span> &lt;span style="color:#000">AddAsChild&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">TvComponent&lt;/span> &lt;span style="color:#000">componentToAdd&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">TvComponent&lt;/span> &lt;span style="color:#000">parent&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">Action&lt;/span>&lt;span style="color:#000;font-weight:bold">&amp;lt;&lt;/span>&lt;span style="color:#000">IAddChildComponentOptions&lt;/span>&lt;span style="color:#000;font-weight:bold">&amp;gt;&lt;/span> &lt;span style="color:#000">options&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#204a87;font-weight:bold">null&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>The &lt;code>AddAfter&lt;/code> and &lt;code>AddAsChild&lt;/code> methods are just offered for convenience as you could do everything using only the &lt;code>Add&lt;/code> method.&lt;/p>
+&lt;blockquote>
+&lt;p>You &lt;strong>can&lt;/strong> add a child component before adding its parent, but the operation won&amp;rsquo;t be effective until you add the parent.&lt;/p>
+&lt;/blockquote>
+&lt;p>By default if a component is added as a child of another component:&lt;/p>
+&lt;ol>
+&lt;li>If the parent component is not added yet, the add operation is delayed until the parent component is added.&lt;/li>
+&lt;li>The parent component is notified when the child is added&lt;/li>
+&lt;li>When the parent component is deleted, all their childs are deleted too&lt;/li>
+&lt;li>A child component &lt;em>can&lt;/em> prevent the deletion of its parent. In this case no components are deleted.&lt;/li>
+&lt;/ol>
+&lt;p>When adding a component using the &lt;code>Add&lt;/code> method, you can use the &lt;code>addOptions&lt;/code> parameter to specify additional options like if this component has parent (same as calling &lt;code>AddAsChild&lt;/code>), if it has to be added after other component (same like &lt;code>AddAfter&lt;/code>) or pass some aditional action to be performed when the component is effectively added.&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-csharp" data-lang="csharp">&lt;span style="color:#000">componentTree&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">Add&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">mycomponent&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">options&lt;/span> &lt;span style="color:#000;font-weight:bold">=&amp;gt;&lt;/span>
+&lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#000">options&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">WithParent&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">parentComponent&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">childOpt&lt;/span> &lt;span style="color:#000;font-weight:bold">=&amp;gt;&lt;/span>
+&lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;span style="color:#000">childOpt&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">DoNotNotifyParentOnAdd&lt;/span>&lt;span style="color:#000;font-weight:bold">();&lt;/span>
+&lt;span style="color:#000">childOpt&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">RetrieveParentStatusChanges&lt;/span>&lt;span style="color:#000;font-weight:bold">();&lt;/span>
+&lt;span style="color:#000;font-weight:bold">});&lt;/span>
+&lt;span style="color:#000;font-weight:bold">});&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>This code adds the &lt;code>mycomponent&lt;/code> as child of &lt;code>parentComponent&lt;/code> and sets the additional options to not notify the parent component that this component is added as its child and that they need to be invalidated if its parent component gets invalidated too (this is useful if the state of the child component have some dependency to the state of its parent).&lt;/p>
+&lt;blockquote>
+&lt;p>Remember: Adding components is an &lt;strong>asyncronous operation&lt;/strong>. Once the &lt;code>Add&lt;/code> method finishes the component is not yet added in the &lt;em>component tree&lt;/em> (just queued to be added).&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="removing-components-from-the-tree">Removing components from the tree&lt;/h2>
+&lt;p>Removing a component from the tree is performed by calling the &lt;code>Remove&lt;/code> method:&lt;/p>
+&lt;div class="highlight">&lt;pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-csharp" data-lang="csharp">&lt;span style="color:#204a87;font-weight:bold">bool&lt;/span> &lt;span style="color:#000">Remove&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">TvComponent&lt;/span> &lt;span style="color:#000">component&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Like adding a component, removing a component is an asynchronous operation. The &lt;code>Remove&lt;/code> method just queues a component to be removed. The method returns &lt;code>false&lt;/code> if the component is not found.&lt;/p>
+&lt;blockquote>
+&lt;p>When a component is deleted all their childs are deleted too. &lt;strong>First are deleted the childs and finally the component itself&lt;/strong>.&lt;/p>
+&lt;/blockquote></description></item><item><title>Docs: What is Tvision2</title><link>/docs/what-is-tvision2/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>/docs/what-is-tvision2/</guid><description>
+&lt;p>TVision2 is a &lt;strong>netstandard&lt;/strong> library created to help you building cross platform console applications with a rich &lt;a href="https://en.wikipedia.org/wiki/Text-based_user_interface">TUI&lt;/a>.&lt;/p>
+&lt;h2 id="why-tvision2-was-created">Why TVision2 was created?&lt;/h2>
+&lt;p>This is a great question. Currently there are some other awesome netstandard libraries out there that have more or less the same purpose that Tvision2:&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://github.com/migueldeicaza/gui.cs">Gui.cs&lt;/a>: This is probably the most known project. It&amp;rsquo;s created and mantained by &lt;a href="https://twitter.com/migueldeicaza">Miguel De Icaza&lt;/a>. Gui.cs acted as a inspiration from TVision2 and some of the Miguel&amp;rsquo;s code (like Mono.curses) is currently used in TVision2.Its maturity state is more advanced than the TVision2 one. However TVision2 offers new capabalities and characteristics that outerperform Gui.cs&lt;/li>
+&lt;/ul>
+&lt;h2 id="what-makes-tvision2-special">What makes TVision2 special?&lt;/h2>
+&lt;p>Of coure I am highly biased here, but TVision2 was designed since the beginning with the &lt;em>pay only what do you use&lt;/em> rule. The core of TVision2 offers you a rich set of mechanisms to build console applications using a game loop approach. Core do not have the concepts of event-driven actions and no &amp;ldquo;controls&amp;rdquo; like textboxes or lists are provided. Based on the services provided by core, TVision2.Controls provide a set of controls (like textboxes, lists, dropdowns, etc). You can choose to use TVision2.Controls or not, based on what do you need. If you are building an &amp;ldquo;application&amp;rdquo; probably would want to use controls, but if you are building a console-based game, maybe you wan&amp;rsquo;t. However the decision is up to you. Same happens with the Layout mechanism. Core only offers absolute positioning, but you can use TVision2.Layouts to get relative layouts like stack panels, grids and so on. You can use Layouts with or without controls and vice-versa.&lt;/p>
+&lt;p>Also TVision2 supports not only 256 colors but also true color. It adapts to the characteristics of OS:&lt;/p>
+&lt;ul>
+&lt;li>In Windows 7 the Windows API console is used and applications are limited to 16 colors. Using some console manager like ConEmu is possible to run the application in 256 colors.&lt;/li>
+&lt;li>In Windows 10 the new VT enabled console API is used, and applications can have 256 colors or true color.&lt;/li>
+&lt;li>In Linux, application can choose to use NCurses (limited to 256 colors) or use the new VT escape codes to have true color.&lt;/li>
+&lt;/ul>
+&lt;p>TVision2 core offers an API that tries to abstract as mucha as possible the current color model used, while giving full functionality to the application developer. TVision2.Controls extends this API to offer Skins that allow the developer to define the colors of each control based on the color model used (16 colors, 256 colors, etc&amp;hellip;).&lt;/p></description></item></channel></rss>
