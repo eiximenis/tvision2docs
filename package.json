@@ -1,0 +1,15 @@
+{
+  "name": "tvision2docs",
+  "version": "1.0.0",
+  "description": "Documentation for Tvision2 - built by Hugo",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "autoprefixer": "^9.7.6",
+    "postcss-cli": "^7.1.0"
+  }
+}
