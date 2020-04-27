@@ -1,7 +1,7 @@
 ---
 title: "The component lifecycles"
 linkTitle: "The component lifecycle"
-weight: 1
+weight: 2
 description: >
   What is the lifecycle of a component
 ---

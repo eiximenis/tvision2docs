@@ -8,4 +8,4 @@ menu:
     weight: 30
 ---
 
-INTRO CONCEPTS
+Getting started with TVision 2 :)

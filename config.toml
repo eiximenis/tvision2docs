@@ -7,7 +7,7 @@ enableRobotsTXT = true
 theme = ["docsy"]
 
 # Will give values to .Lastmod etc.
-# enableGitInfo = true
+enableGitInfo = true
 
 # Language settings
 contentDir = "content/en"
@@ -93,6 +93,8 @@ url_latest_version = "https://tvision2.eiximenis.dev"
 
 # Repository configuration (URLs for in-page links to opening issues and suggesting changes)
 github_repo = "https://github.com/eiximenis/tvision2docs"
+github_branch = "hugo"
+
 # An optional link to a related project repo. For example, the sibling repository where your product code lives.
 github_project_repo = "https://github.com/eiximenis/tvision2"
 

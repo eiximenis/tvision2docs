@@ -2,10 +2,10 @@
 ---
 title: "Core Concepts"
 linkTitle: "Core Concepts"
-weight: 30
+weight: 40
 menu:
   main:
-    weight: 30
+    weight: 40
 ---
 
 CORE CONCEPTS
