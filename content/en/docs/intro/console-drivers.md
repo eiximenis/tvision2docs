@@ -16,7 +16,7 @@ The _console driver_ is the responsible to flush the real characters to the unde
 
 * `Win32AnsiSeqConsoleDriver`: This driver uses the new _virtual terminal_ API that is available in Windows 10. It supports true color and mouse support, but only in Windows 10+.
 
-* `TerminfoConsoleDriver`: This **highly experimental** driver uses plain [Terminfo](https://en.wikipedia.org/wiki/Terminfo) sequences. It supports true color and runs only in Linux.
+* `AnsiLinuxConsoleDriver`: This driver uses standard ANSI escape sequences for Linux that should work on most of the modern terminals (like xterm).
 
 ## Choosing one console driver
 
@@ -41,25 +41,22 @@ setup.UsePlatformConsoleDriver(opt =>
         .OnLinux(lo =>
         {
             // We want to setup our palette
-            lo.UsePalette(p =>
+            lo.UseAnsi().UsePalette(p =>
             {
                 // Will init the palette using our terminal name (currently only xterm-256color is supported)
                 p.LoadFromTerminalName();
-                // We want to be able to use RGB colors, but if we are in palette mode (no full direct color)
-                // we need to setup a translator that translates any RGB color in a palette color. 
-                p.TranslateRgbColorsWith(new  InterpolationPaletteTranslator());
+                /* We want to be able to use RGB colors
+                but if we are in palette mode (no full direct color) 
+                we need to setup a translator that translates any RGB
+                color in a palette color. */
+                p.TranslateRgbColorsWith(new InterpolationPaletteTranslator());
             });
-
-            // EXPERIMENTAL: Use true color support. This forces the use of the TerminfoConsoleDriver driver
-            // lo.UseDirectAccess(dop => dop.UseTrueColor());
         })
         // Windows specific config
         .OnWindows(w =>
         {
-            // We want to use ANSI sequences, allowing full color also. This is only
-            // available in Win10. If running in older windows, application will be in
-            // basic color mode (16 colors)
-            w.EnableAnsiSequences();
+            // We want to use the new ANSI sequences available on Win10
+            w.UseAnsi();
         })
     )
 ```
