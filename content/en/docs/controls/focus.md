@@ -1,7 +1,7 @@
 ---
 title: "Focus management"
 linkTitle: "Focus management"
-weight: 2
+weight: 4
 description: >
   Handling the focus
 ---

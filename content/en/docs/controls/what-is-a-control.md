@@ -1,7 +1,7 @@
 ---
 title: "What is a control?"
 linkTitle: "What is a control?"
-weight: 1
+weight: 2
 description: >
   What is a control and how they interact with standard core components
 ---

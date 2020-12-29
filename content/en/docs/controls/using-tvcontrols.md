@@ -1,7 +1,7 @@
 ---
 title: "Using TvControls"
 linkTitle: "Using TvControls"
-weight: 3
+weight: 1
 description: >
   How to use TvControls library
 ---

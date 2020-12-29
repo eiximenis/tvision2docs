@@ -14,7 +14,7 @@ This is a great question. Currently there are some other awesome netstandard lib
 
 * [Gui.cs](https://github.com/migueldeicaza/gui.cs): This is probably the most known project. It's created and mantained by [Miguel De Icaza](https://twitter.com/migueldeicaza). Gui.cs acted as a inspiration from TVision2 and some of the Miguel's code (like Mono.curses) is currently used in TVision2.Its maturity state is more advanced than the TVision2 one. However TVision2 offers new capabalities and characteristics that outerperform Gui.cs
 
-* [Spectre.Console] (https://github.com/spectresystems/spectre.console): I need to review more this library but it seems to be focused on allow you to easy create beautyful console outputs (like tables) with ANSI support (for 256 colors). However do not seem to offer a full application model handling the lifecycle and the input events. I liked some of their ideas by the way. If you **don't want to create full TUIs applications** but just "simple" console applications, but prettier, this is an awesome library to use.
+* [Spectre.Console](https://github.com/spectresystems/spectre.console): I need to review more this library but it seems to be focused on allow you to easy create beautyful console outputs (like tables) with ANSI support (for 256 colors). However do not seem to offer a full application model handling the lifecycle and the input events. I liked some of their ideas by the way. If you **don't want to create full TUIs applications** but just "simple" console applications, but prettier, this is an awesome library to use.
 
 ## What makes TVision2 special?
 

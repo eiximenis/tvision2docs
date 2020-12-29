@@ -1,7 +1,7 @@
 ---
 title: "Creating child controls"
 linkTitle: "Creating child controls"
-weight: 2
+weight: 5
 description: >
   Creating and dealing with child controls
 ---
